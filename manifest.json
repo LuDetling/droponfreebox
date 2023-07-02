@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "drop on freebox",
+  "version": "1.0",
+  "icons": {
+    "16": "images/Take-Drop-16.png",
+    "32": "images/Take-Drop-32.png",
+    "48": "images/Take-Drop-48.png",
+    "128": "images/Take-Drop-128.png"
+  },
+  "description": "envoyer directement les téléchargements sur la freebox",
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": ["https://uptobox.com/*"]
+    }
+  ]
+}
