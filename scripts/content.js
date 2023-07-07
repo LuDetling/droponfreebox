@@ -1,42 +1,45 @@
-const getData = async () => {
-    try {
-        const response = await fetch("mafreebox.freebox.fr/api/v8/login/authorize/", {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-            method: "POST"
-        });
-    console.log(response);
+const value = {
+    checked: false,
+    link: null,
+}
+const createCheckbox = () => {
+    const newCheckbox = document.createElement("div");
 
-    } catch (error) {
-        console.log("il y a une erreure : " + error);
-    }
+    newCheckbox.innerHTML = `
+        <input type="checkbox" id="checkbox" name="checkbox""></input>
+        <label for="checkbox">Envoyer sur la freebox</label>
+    `
+
+    document.querySelector("#dl center").appendChild(newCheckbox);
 }
 
-getData()
-// afficher une case a cocher si je veux l'envoyer sur freebox server
-window.onload = () => {
-    const buttonDownload = document.querySelector('#dl center');
-    const newCheckbox = document.createElement("input");
-    const newLabel = document.createElement("label");
-    const newDiv = document.createElement("div");
+createCheckbox()
 
-    newDiv.appendChild(newLabel);
-    newDiv.appendChild(newCheckbox);
+const checked = () => {
+    const checkbox = document.querySelector("#checkbox");
 
-    newCheckbox.type = "checkbox";
-    newCheckbox.name = "freebox";
-    newCheckbox.id = "freebox";
 
-    newLabel.setAttribute("for", "freebox");
-    newLabel.textContent = "Ajouter à ma freebox";
+    checkbox.addEventListener('change', (e) => {
+        if (!e.target.checked) {
+            value.checked = false
+            value.link = null
+            linkInStorage(value)
+        }
+        else {
 
-    buttonDownload.appendChild(newDiv);
-
-    document.querySelector("#freebox").addEventListener("change", (e) => {
-        //conditions de la checkbox
-        if(!e.target.checked) return 
-        
+            value.checked = true;
+            value.link = document.querySelector("#dl center a").href
+            linkInStorage(value)
+        }
     })
+
+}
+
+checked()
+
+const linkInStorage = (value) => {
+    console.log('ici');
+    chrome.storage.local.set({ key: value }).then(() => {
+        console.log("Value is set");
+    });
 }
