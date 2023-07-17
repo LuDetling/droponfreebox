@@ -1,0 +1,36 @@
+#dl center > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#dl center > div #download {
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#dl center > div #download .content-bar {
+  position: relative;
+  height: 9.2px;
+  margin-right: 1rem;
+  width: 100px;
+}
+#dl center > div #download .content-bar .bar {
+  height: 10px;
+  border-radius: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#dl center > div #download .content-bar .bar-show {
+  background-color: green;
+  z-index: 1;
+  transition: 0.3s;
+}
+#dl center > div #download .content-bar .bar-back {
+  width: 100px;
+  background-color: grey;
+  box-shadow: 0 0 3px 1px grey;
+}
+
+/*# sourceMappingURL=style.css.map */

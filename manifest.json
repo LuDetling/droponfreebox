@@ -16,12 +16,13 @@
   "content_scripts": [
     {
       "js": ["scripts/content.js"],
-      "matches": ["https://uptobox.com/*"]
+      "matches": ["https://uptobox.com/*"],
+      "css": ["style/style.css"]
     }
   ],
   "permissions": ["webRequest", "activeTab", "scripting", "storage"],
   "host_permissions": [
-    "https://mafreebox.freebox.fr/*",
+    "https://mareebox.freebox.fr/*",
     "http://mafreebox.freebox.fr/*"
   ],
   "action": {

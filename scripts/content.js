@@ -2,21 +2,28 @@ const button = document.querySelector("#dl center a")
 const value = {
     checked: false,
     url: null,
-    dl: false
+    dl: false,
+    timer: null,
 }
 
-const createCheckbox = () => {
-    const newCheckbox = document.createElement("div");
+const createContent = () => {
+    const newContent = document.createElement("div");
 
-    newCheckbox.innerHTML = `
+    newContent.innerHTML = `
     <input type="checkbox" id="checkbox" name="checkbox""></input>
     <label for="checkbox">Envoyer sur la freebox</label>
+    <div id="download">
+        <div class="content-bar">
+            <div class="bar bar-show"></div>
+            <div class="bar bar-back"></div>
+        </div>
+        <div class="show-pourcent">0%</div>
+    </div>
     `
-
-    document.querySelector("#dl center").appendChild(newCheckbox);
+    document.querySelector("#dl center").appendChild(newContent);
 }
 
-createCheckbox()
+createContent()
 
 const checked = () => {
     const checkbox = document.querySelector("#checkbox");
@@ -57,3 +64,18 @@ const urlInStorage = (value) => {
         console.log("Value is set");
     });
 }
+
+const showTimer = async () => {
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+        for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+            console.log(newValue.timer);
+            if (newValue.timer) {
+
+                document.querySelector(".show-pourcent").innerHTML = newValue.timer + "%";
+                document.querySelector(".bar-show").style.width = newValue.timer + "px"
+            }
+        }
+    });
+}
+
+showTimer()

@@ -8,7 +8,13 @@
  * the input message.
  */
 
-let sessionToken
+let sessionToken, inDownload
+const value = {
+    checked: false,
+    url: null,
+    dl: false,
+    timer: null,
+}
 async function cryptoSign(key, data) {
     var enc = new TextEncoder("utf-8");
 
@@ -55,7 +61,14 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
                     })
                         .then(res => res.json())
                         .then(data => {
-                            console.log(data)
+                            if (data.success) {
+                                inDownload = true;
+                                setTimeout(() => {
+                                    showTimer(data.result.id);
+                                }, 2000);
+                            } else {
+                                //notif an error
+                            }
                         })
                 } catch (error) {
                     console.log(error);
@@ -67,6 +80,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     }
 });
 
+//if appli is not in your freebox, start with this function
 // const authorizeFreebox = async () => {
 //     const dataToFetch = {
 //         app_id: "fr.freebox.FreeboxMediaUploader",
@@ -132,3 +146,38 @@ const openSession = async (password) => {
 }
 
 authorizationProgress()
+
+//show timer of download
+
+const showTimer = async (trackId) => {
+    console.log(trackId);
+    setInterval(async () => {
+        if (!inDownload) return
+        try {
+            await fetch(host + "/api/v8/downloads/" + trackId, {
+                headers: {
+                    "X-Fbx-App-Auth": sessionToken
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    const size = data.result.size;
+                    const sizing = data.result.rx_bytes;
+                    console.log(sizing);
+                    console.log(size);
+                    if (sizing !== size) {
+                        // envoyer cette valeur
+                        const dl = Math.round((sizing / size) * 100);
+                        chrome.storage.local.set({ key: value }).then(() => {
+                            value.timer = dl
+                        });
+                    } else {
+                        inDownload = false;
+                    }
+                })
+        } catch (error) {
+            console.log(error);
+        }
+    }, 1000);
+}
